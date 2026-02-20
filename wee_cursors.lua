@@ -14,7 +14,7 @@ for i=1,cursor_image_amount do
     local CURSOR_FIXED_PATH = assert(NFS.newFileData(CURSOR_MOD_PATH),('Failed to collect file data for Atlas %s'):format('cursor'))
     CURSOR_IMAGES[i] = love.graphics.newImage(CURSOR_FIXED_PATH, { mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling })
     -- manual checks
-    if i == 1 or i == 8  then
+    if i == 1 or i == 8 or i == 5 then
         ANCHOR_COORDINATES[i] = {x=10,y=0}
     elseif i == 2 then
         ANCHOR_COORDINATES[i] = {x=2,y=6}
@@ -22,12 +22,12 @@ for i=1,cursor_image_amount do
         ANCHOR_COORDINATES[i] = {x=11,y=32}
     elseif i == 4 then
         ANCHOR_COORDINATES[i] = {x=9,y=0}
-    elseif i == 5 then
-        ANCHOR_COORDINATES[i] = {x=11,y=0}
     elseif i == 6 then
-        ANCHOR_COORDINATES[i] = {x=18,y=0}
-    elseif i == 7 or i == 9 then
+        ANCHOR_COORDINATES[i] = {x=15,y=0}
+    elseif i == 7 then
         ANCHOR_COORDINATES[i] = {x=4,y=4}
+    elseif i == 9 then
+        ANCHOR_COORDINATES[i] = {x=4,y=6}
     else
         ANCHOR_COORDINATES[i] = {x=0,y=0}
     end
