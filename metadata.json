@@ -1,0 +1,14 @@
+{
+	"id": "wee_cursors",
+	"name": "Wee Cursors",
+	"display_name": "Wee Cursors",
+	"author": ["CTEH (aka 3AXAPOCAH)"],
+	"description": "Adds a virtual cursor to Balatro",
+	"prefix": "wee_cursors",
+	"main_file": "wee_cursors.lua",
+	"priority": 0,
+	"version": "1.0.0",
+	"dependencies": [
+		"Steamodded"
+	]
+}
