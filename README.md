@@ -1,1 +1,5 @@
-Added a virtual cursor with joker sprites when the mouse is held down too
+Adds a virtual cursor with joker sprites
+
+https://github.com/user-attachments/assets/38297099-19b9-4336-aaf9-0e87d9464ea5
+
+https://github.com/user-attachments/assets/da0d578f-b4b9-4a6f-a31f-864630e02e34
