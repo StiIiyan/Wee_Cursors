@@ -46,6 +46,7 @@ local CURSOR = {
     x = love.graphics.getWidth() / 2,
     y = love.graphics.getHeight() / 2,
     sensitivity = 1,
+    in_game_windowed = true,
 
     image = CURSOR_IMAGES[i1],
     -- offsets
@@ -55,12 +56,31 @@ local CURSOR = {
     held = false,
 }
 local function keepCursorInBorder()
-    if CURSOR.x < 0 then CURSOR.x = 0
-    elseif CURSOR.x > love.graphics.getWidth() then CURSOR.x = love.graphics.getWidth()
+    local outside_game = false
+    if CURSOR.x < 0 then
+        CURSOR.x = 0
+        outside_game = true
+    elseif CURSOR.x > love.graphics.getWidth() then
+        CURSOR.x = love.graphics.getWidth()
+        outside_game = true
     end
-    if CURSOR.y < 0 then CURSOR.y = 0
-    elseif CURSOR.y > love.graphics.getHeight() then CURSOR.y = love.graphics.getHeight()
+    if CURSOR.y < 0 then
+        CURSOR.y = 0
+        outside_game = true
+    elseif CURSOR.y > love.graphics.getHeight() then
+        CURSOR.y = love.graphics.getHeight()
+        outside_game = true
     end
+    return outside_game
+end
+local function getOutsideCoordinates()
+    local x,y = getCursorPosition()
+    if x == 0 then x = -1
+    elseif y == 0 then y = -1
+    elseif y == love.graphics.getHeight() then y = love.graphics.getHeight() + 1
+    elseif x == love.graphics.getWidth() then x = love.graphics.getWidth() + 1
+    end
+    return x,y
 end
 
 function G.FUNCS.set_m1_cursor(args)
@@ -89,6 +109,10 @@ end
 function getCursorPosition()
     return CURSOR.x, CURSOR.y
 end
+function setCursorPosition(x,y)
+    CURSOR.x = x
+    CURSOR.y = y
+end
 
 
 SMODS.current_mod.config_tab = function()
@@ -101,19 +125,16 @@ SMODS.current_mod.config_tab = function()
 end
 
 ------------------------------- LOVE FUNCTIONS
-local prev_load = love.load
-function love.load()
-    prev_load()
-
-    love.mouse.setRelativeMode(true)
-end
-
 local prev_update = love.update
 function love.update(dt)
     prev_update(dt)
     
     love.mouse.setVisible(false)
-    love.mouse.setRelativeMode(true)
+    if CURSOR.in_game_windowed then
+        love.mouse.setRelativeMode(true)
+    else
+        love.mouse.setRelativeMode(false)
+    end
 end
 
 local prev_draw = love.draw
@@ -135,7 +156,6 @@ function love.draw()
     end
 end
 
-
 local prev_mousepressed = love.mousepressed
 function love.mousepressed(x, y, button)
     local cx, cy = getCursorPosition()
@@ -152,9 +172,24 @@ end
 
 local prev_mousemoved = love.mousemoved
 function love.mousemoved(x, y, dx, dy)
-    CURSOR.x = CURSOR.x + dx * CURSOR.sensitivity
-    CURSOR.y = CURSOR.y + dy * CURSOR.sensitivity
-    keepCursorInBorder()
+    if CURSOR.in_game_windowed then -- move only when in border
+        CURSOR.x = CURSOR.x + dx * CURSOR.sensitivity
+        CURSOR.y = CURSOR.y + dy * CURSOR.sensitivity
+    end
+
+    -- KEEP IN BORDER
+    local outside_game = keepCursorInBorder()
+    if outside_game and G.SETTINGS.WINDOW.screenmode == 'Windowed' then
+        if CURSOR.in_game_windowed then
+            love.mouse.setPosition(getOutsideCoordinates())
+        end
+        CURSOR.in_game_windowed = false
+    else
+        if not CURSOR.in_game_windowed then
+            setCursorPosition(love.mouse.getPosition())
+        end
+        CURSOR.in_game_windowed = true
+    end
 
     prev_mousemoved(x, y, dx, dy)
 end
