@@ -8,6 +8,7 @@
 	"main_file": "wee_cursors.lua",
 	"priority": 1,
 	"version": "1.0.0",
+    "icon_path": "icon.png",
 	"dependencies": [
 		"Steamodded"
 	]

@@ -1,11 +1,3 @@
-SMODS.Atlas({
-    key = "modicon",
-    path = "icon.png",
-    px = 34,
-    py = 34
-})
-
-
 local CURSOR_IMAGES = {}
 local ANCHOR_COORDINATES = {}
 local cursor_image_amount = 9
