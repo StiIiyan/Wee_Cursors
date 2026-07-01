@@ -10,7 +10,7 @@ local CURSOR_IMAGES = {}
 local ANCHOR_COORDINATES = {}
 local cursor_image_amount = 9
 for i=1,cursor_image_amount do
-    local CURSOR_MOD_PATH = SMODS.Mods["wee_cursors"].path .. "assets/2x/cursor" .. i .. ".png"
+    local CURSOR_MOD_PATH = SMODS.Mods["WeeCursors"].path .. "assets/2x/cursor" .. i .. ".png"
     local CURSOR_FIXED_PATH = assert(NFS.newFileData(CURSOR_MOD_PATH),('Failed to collect file data for Atlas %s'):format('cursor'))
     CURSOR_IMAGES[i] = love.graphics.newImage(CURSOR_FIXED_PATH, { mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling })
     -- manual checks
@@ -35,13 +35,13 @@ end
 local CURSOR_HELD_IMAGES = {}
 local cursor_held_image_amount = 8
 for i=1,cursor_held_image_amount do
-    local CURSOR_MOD_PATH = SMODS.Mods["wee_cursors"].path .. "assets/2x/cursor_held" .. i .. ".png"
+    local CURSOR_MOD_PATH = SMODS.Mods["WeeCursors"].path .. "assets/2x/cursor_held" .. i .. ".png"
     local CURSOR_FIXED_PATH = assert(NFS.newFileData(CURSOR_MOD_PATH),('Failed to collect file data for Atlas %s'):format('cursor'))
     CURSOR_HELD_IMAGES[i] = love.graphics.newImage(CURSOR_FIXED_PATH, { mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling })
 end
 
-local i1 = SMODS.Mods['wee_cursors'].config.cursor_index
-local i2 = SMODS.Mods['wee_cursors'].config.held_cursor_index
+local i1 = SMODS.Mods['WeeCursors'].config.cursor_index
+local i2 = SMODS.Mods['WeeCursors'].config.held_cursor_index
 local CURSOR = {
     x = love.graphics.getWidth() / 2,
     y = love.graphics.getHeight() / 2,
@@ -84,7 +84,7 @@ local function getOutsideCoordinates()
 end
 
 function G.FUNCS.set_m1_cursor(args)
-    SMODS.Mods['wee_cursors'].config.cursor_index = args.to_key
+    SMODS.Mods['WeeCursors'].config.cursor_index = args.to_key
     local i = args.to_key
 
     CURSOR.image = CURSOR_IMAGES[i] or CURSOR_IMAGES[1]
@@ -92,7 +92,7 @@ function G.FUNCS.set_m1_cursor(args)
     CURSOR.oy = ANCHOR_COORDINATES[i] and ANCHOR_COORDINATES[i].y or ANCHOR_COORDINATES[1].y
 end
 function G.FUNCS.set_m1_held_cursor(args)
-    SMODS.Mods['wee_cursors'].config.held_cursor_index = args.to_key
+    SMODS.Mods['WeeCursors'].config.held_cursor_index = args.to_key
 
     CURSOR.image_held = CURSOR_HELD_IMAGES[args.to_key] or CURSOR_HELD_IMAGES[1]
 end
@@ -104,7 +104,7 @@ function setSensitivity(new_sens)
     CURSOR.sensitivity = new_sens
 end
 function resetSensitivity()
-    setSensitivity(SMODS.Mods['wee_cursors'].config.default_sensitivity)
+    setSensitivity(SMODS.Mods['WeeCursors'].config.default_sensitivity)
 end
 function getCursorPosition()
     return CURSOR.x, CURSOR.y
@@ -117,10 +117,10 @@ end
 
 SMODS.current_mod.config_tab = function()
   return {n=G.UIT.ROOT, config = {align = "cm", padding = 0.05, r = 0.1, colour = G.C.CLEAR}, nodes = {
-      create_slider({label = 'Sensitivity', w = 4, h = 0.4, ref_table = SMODS.Mods['wee_cursors'].config, ref_value = 'default_sensitivity', callback = 'reset_sensitivity', min = 0.5, max = 2, decimal_places = 2, current_option = SMODS.Mods['wee_cursors'].config.default_sensitivity or 1}),
-      create_option_cycle({w = 4, scale = 0.8, label = 'M1 Cursor', options = {'Four Fingers','Banner','Cloud 9','Arrowhead','Gros Michel','Bootstraps','Ceremonial Dagger','Rocket','Seltzer'}, opt_callback = 'set_m1_cursor', current_option = SMODS.Mods['wee_cursors'].config.cursor_index or 1}),
-      create_toggle({label = "Held Cursor", ref_table = SMODS.Mods['wee_cursors'].config, ref_value = 'is_m1_held', current_option = SMODS.Mods['wee_cursors'].config.is_m1_held or true}),
-      create_option_cycle({w = 4, scale = 0.8, label = 'Held Cursor', options = {'Fist','Bean','Egg','Oops','Bull','8 ball','Square','Delayed Grat'}, opt_callback = 'set_m1_held_cursor', current_option = SMODS.Mods['wee_cursors'].config.held_cursor_index or 1}),
+      create_slider({label = 'Sensitivity', w = 4, h = 0.4, ref_table = SMODS.Mods['WeeCursors'].config, ref_value = 'default_sensitivity', callback = 'reset_sensitivity', min = 0.5, max = 2, decimal_places = 2, current_option = SMODS.Mods['WeeCursors'].config.default_sensitivity or 1}),
+      create_option_cycle({w = 4, scale = 0.8, label = 'M1 Cursor', options = {'Four Fingers','Banner','Cloud 9','Arrowhead','Gros Michel','Bootstraps','Ceremonial Dagger','Rocket','Seltzer'}, opt_callback = 'set_m1_cursor', current_option = SMODS.Mods['WeeCursors'].config.cursor_index or 1}),
+      create_toggle({label = "Held Cursor", ref_table = SMODS.Mods['WeeCursors'].config, ref_value = 'is_m1_held', current_option = SMODS.Mods['WeeCursors'].config.is_m1_held or true}),
+      create_option_cycle({w = 4, scale = 0.8, label = 'Held Cursor', options = {'Fist','Bean','Egg','Oops','Bull','8 ball','Square','Delayed Grat'}, opt_callback = 'set_m1_held_cursor', current_option = SMODS.Mods['WeeCursors'].config.held_cursor_index or 1}),
   }}
 end
 
@@ -141,7 +141,7 @@ local prev_draw = love.draw
 function love.draw()
     prev_draw()
 
-    if CURSOR.held == true and SMODS.Mods['wee_cursors'].config.is_m1_held then
+    if CURSOR.held == true and SMODS.Mods['WeeCursors'].config.is_m1_held then
         love.graphics.draw(
             CURSOR.image_held,
             CURSOR.x,
